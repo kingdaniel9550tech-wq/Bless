@@ -67,7 +67,7 @@
             anniversaryDate: "Lover's Day",
             relationshipStartDate: "2025-12-04T00:00:00", 
             birthdayDate: "2026-08-16T00:00:00",
-            acceptedNames: ["abioye daniel olusegun", "daniel", "olusegun", "abioye", "dan", "segun"],
+            acceptedNames: ["abioye daniel olusegun", "daniel"],
             
             reasons: [
               { title: "Your Radiant Smile", text: "It has the magic power to completely turn my worst days into pure sunshine." },
@@ -78,7 +78,7 @@
 
             birthdayWishes: [
               { title: "A Queen's Year", text: "May this new year of your life bring you endless blessings, success, and glowing happiness." },
-              { title: "My Greatest Gift", text: "Having you in my life is the greatest blessing I could ever ask for. Happy Birthday, Tofunmi!" },
+              { title: "My Greatest Gift", text: "Having you in my life is the greatest blessing I could ever ask for. Happy Birthday in advance, MY LOVE!" },
               { title: "Dreams Realized", text: "May every single dream and secret prayer of your heart be answered abundantly this year." },
               { title: "Forever By Your Side", text: "I promise to cherish, protect, and love you deeper with every passing birthday we share." }
             ],
@@ -180,7 +180,7 @@
                 <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
                   <div className="glass-panel p-10 md:p-14 rounded-3xl max-w-lg w-full text-center relative overflow-hidden">
                     <h1 className="text-3xl md:text-5xl font-extrabold mb-3">Hey <span className="text-gradient">{config.babeName}</span></h1>
-                    <p className="text-gray-300 text-base md:text-lg mb-12">HAPPY LOVE LOVER/GIRLFRIEND DAY, and I have a small childplay .just for you. Are you ready to see it?</p>
+                    <p className="text-gray-300 text-base md:text-lg mb-12">HAPPY LOVER/GIRLFRIEND DAY, and I have a small childplay just for you. Are you ready to see it?</p>
                     <div className="relative h-36 w-full flex justify-center items-center">
                       <button onClick={() => setStage('verify')} className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-20 px-10 py-4 bg-gradient-to-r from-rose-500 via-pink-600 to-purple-600 rounded-full font-bold text-lg shadow-xl text-white">
                         Yes, take me in ✨
@@ -199,7 +199,7 @@
                     <h2 className="text-2xl md:text-3xl font-bold mb-3">Identity Check 🕵️‍♀️</h2>
                     <p className="text-gray-300 text-sm md:text-base mb-8">Type your boyfriend/lover's full name:</p>
                     <form onSubmit={handleVerify} className="flex flex-col gap-4">
-                      <input type="text" placeholder="e.g. ❤️🩵❣️" value={loginName} onChange={(e) => { setLoginName(e.target.value); setLoginError(''); }} disabled={isUnlocked} className="w-full bg-black/40 border border-white/15 rounded-2xl px-5 py-4 text-center text-lg text-white focus:outline-none focus:border-rose-500" />
+                      <input type="text" placeholder="e.g. ❤️J🩵T✨️E❣️" value={loginName} onChange={(e) => { setLoginName(e.target.value); setLoginError(''); }} disabled={isUnlocked} className="w-full bg-black/40 border border-white/15 rounded-2xl px-5 py-4 text-center text-lg text-white focus:outline-none focus:border-rose-500" />
                       {loginError && <p className="text-red-400 text-xs md:text-sm">{loginError}</p>}
                       <button type="submit" disabled={!loginName.trim() || isUnlocked} className="mt-2 py-4 px-6 rounded-2xl font-bold bg-gradient-to-r from-rose-500 to-purple-600 text-white shadow-lg">
                         {isUnlocked ? "Access Granted! ❤️" : "Unlock"}
@@ -213,9 +213,9 @@
                 <div className="relative z-10 w-full min-h-screen py-16 px-4 md:px-8 flex flex-col items-center">
                   <div className="text-center mb-10 max-w-2xl">
                     <div className="inline-block px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs md:text-sm font-medium mb-4">
-                      🔥 Happy {config.anniversaryDate} & Early Birthday in Advance, Elizabeth Tofunmi!
+                      🔥 Happy {config.anniversaryDate} Birthday in Advance, Elizabeth Tofunmi!
                     </div>
-                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-gradient mb-4">I Love You Forever like you onece said, LOVE IS SWEET FOREVER.</h1>
+                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-gradient mb-4">I Love You Forever like you once said, LOVE IS SWEET FOREVER.</h1>
                     <p className="text-gray-400 text-base md:text-lg">Crafted with devotion by <span className="text-rose-400">{config.yourName}</span></p>
                   </div>
 
