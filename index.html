@@ -3,345 +3,509 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For - My Love</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Happy Birthday</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React & ReactDOM CDNs -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <!-- Babel Standalone for JSX support -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts: Cinzel for royal headers, Plus Jakarta Sans for ultra-crisp body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #03030b; color: white; font-family: system-ui, -apple-system, sans-serif; overflow-x: hidden; }
-        .cursor-aura { pointer-events: none; position: fixed; width: 350px; height: 350px; background: radial-gradient(circle, rgba(236, 72, 153, 0.12) 0%, rgba(147, 51, 234, 0.05) 50%, transparent 80%); border-radius: 50%; transform: translate(-50%, -50%); z-index: 2; transition: width 0.3s, height 0.3s; }
-        .ambient-blob { position: fixed; border-radius: 50%; filter: blur(120px); z-index: 0; animation: float-blob 12s ease-in-out infinite alternate; }
-        @keyframes float-blob { 0% { transform: translate(0px, 0px) scale(1); } 100% { transform: translate(40px, -50px) scale(1.2); } }
-        @keyframes drift { 0% { transform: translateY(0vh) rotate(0deg); opacity: 0; } 15% { opacity: 0.9; } 85% { opacity: 0.9; } 100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
-        .particle { position: absolute; animation: drift linear infinite; z-index: 1; }
-        .perspective-1000 { perspective: 1200px; }
-        .preserve-3d { transform-style: preserve-3d; }
-        .backface-hidden { backface-visibility: hidden; }
-        .rotate-y-180 { transform: rotateY(180deg); }
-        @keyframes heartbeat { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 25px rgba(244, 63, 94, 0.7)); } 15% { transform: scale(1.12); filter: drop-shadow(0 0 45px rgba(244, 63, 94, 0.95)); } 30% { transform: scale(1); filter: drop-shadow(0 0 25px rgba(244, 63, 94, 0.7)); } 45% { transform: scale(1.12); filter: drop-shadow(0 0 55px rgba(236, 72, 153, 1)); } }
-        .animate-heartbeat { animation: heartbeat 1.4s ease-in-out infinite; }
-        @keyframes ripple { 0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.45); transform: scale(0.85); opacity: 1; } 100% { box-shadow: 0 0 0 180px rgba(244, 63, 94, 0); transform: scale(2.2); opacity: 0; } }
-        .ripple-ring { position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid rgba(244, 63, 94, 0.5); animation: ripple 3.5s linear infinite; }
-        .ripple-ring:nth-child(2) { animation-delay: 1.2s; }
-        .ripple-ring:nth-child(3) { animation-delay: 2.4s; }
-        @keyframes orbit { 0% { transform: rotate(0deg) translateX(135px) rotate(0deg); } 100% { transform: rotate(360deg) translateX(135px) rotate(-360deg); } }
-        .orbit-element { position: absolute; top: 50%; left: 50%; width: 14px; height: 14px; margin-top: -7px; margin-left: -7px; background: #fbcfe8; border-radius: 50%; box-shadow: 0 0 15px #fbcfe8, 0 0 30px #f43f5e; animation: orbit 7s linear infinite; }
-        .glass-panel { background: rgba(255, 255, 255, 0.025); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 15px rgba(255, 255, 255, 0.03); }
-        .glass-panel-hover:hover { border-color: rgba(244, 63, 94, 0.4); box-shadow: 0 25px 60px rgba(244, 63, 94, 0.15), inset 0 1px 20px rgba(255, 255, 255, 0.05); }
-        .text-gradient { background: linear-gradient(135deg, #fff 20%, #f43f5e 50%, #c084fc 80%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 250% auto; animation: shimmer 6s linear infinite; }
-        @keyframes shimmer { to { background-position: 250% center; } }
-        @keyframes soundwave { 0%, 100% { height: 8px; } 50% { height: 28px; } }
-        .wave-bar { width: 4px; background: #f43f5e; border-radius: 99px; animation: soundwave 1.2s ease-in-out infinite; }
-      </style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030206;
+            color: #f3f4f6;
+        }
+        .font-royal {
+            font-family: 'Cinzel', serif;
+        }
+        /* Custom 3D Card Engine */
+        .scene-container {
+            perspective: 1200px;
+        }
+        .card-rotator {
+            transform-style: preserve-3d;
+            transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .card-face {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        @keyframes softFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float-subtle {
+            animation: softFloat 4.5s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 overflow-x-hidden relative selection:bg-amber-500 selection:text-black">
 
-    <script type="text/babel">
-        function App() {
-          const [stage, setStage] = React.useState('intro');
-          const [noBtnPos, setNoBtnPos] = React.useState({ top: '60%', left: '65%' });
-          const [isNoHovered, setIsNoHovered] = React.useState(false);
-          const [particles, setParticles] = React.useState([]);
-          const [mousePos, setMousePos] = React.useState({ x: -100, y: -100 });
-          const [flippedCards, setFlippedCards] = React.useState({});
-          const [bdayFlippedCards, setBdayFlippedCards] = React.useState({});
-          const [activeTab, setActiveTab] = React.useState('letter');
-          
-          const [loginName, setLoginName] = React.useState('');
-          const [loginError, setLoginError] = React.useState('');
-          const [isUnlocked, setIsUnlocked] = React.useState(false);
-          const [successParticles, setSuccessParticles] = React.useState([]);
+    <!-- Atmospheric Lighting Backdrops -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-gradient-to-b from-purple-900/20 via-pink-900/10 to-transparent rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-10 w-80 h-80 bg-amber-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-          const [timeTogether, setTimeTogether] = React.useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-          const [birthdayCountdown, setBirthdayCountdown] = React.useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-          const config = {
-            babeName: "Elizabeth Tofunmi", 
-            yourName: "Abioye Daniel Olusegun", 
-            anniversaryDate: "Lover's Day",
-            relationshipStartDate: "2025-12-04T00:00:00", 
-            birthdayDate: "2026-08-16T00:00:00",
-            acceptedNames: ["abioye daniel olusegun", "daniel"],
+    <!-- ================= ENTRANCE GATEWAY (Ensures Audio & Focus) ================= -->
+    <div id="entryGateway" class="fixed inset-0 z-50 bg-[#030206] flex flex-col items-center justify-center p-6 text-center transition-opacity duration-700">
+        <div class="max-w-md w-full bg-white/[0.03] border border-white/10 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl space-y-6 relative overflow-hidden">
+            <div class="absolute -top-16 -right-16 w-36 h-36 bg-amber-400/15 rounded-full blur-3xl"></div>
             
-            reasons: [
-              { title: "Your Radiant Smile", text: "It has the magic power to completely turn my worst days into pure sunshine." },
-              { title: "Your Pure Heart", text: "The genuine kindness and compassion you show to everyone leaves me in awe." },
-              { title: "Endless Laughter", text: "Every single moment with you is filled with joy, giggles, and unforgettable warmth." },
-              { title: "My Forever Home", text: "In your arms is the one among the place in the universe where I truly feel at peace." }
-            ],
-
-            birthdayWishes: [
-              { title: "A Queen's Year", text: "May this new year of your life bring you endless blessings, success, and glowing happiness." },
-              { title: "My Greatest Gift", text: "Having you in my life is the greatest blessing I could ever ask for. Happy Birthday in advance, MY LOVE!" },
-              { title: "Dreams Realized", text: "May every single dream and secret prayer of your heart be answered abundantly this year." },
-              { title: "Forever By Your Side", text: "I promise to cherish, protect, and love you deeper with every passing birthday we share." }
-            ],
-
-            birthdayPoem: `Elizabeth, a name of grace and light,\nTofunmi, my joy from morning till night.\nOn this sweet day when you were born,\nA star lit up, beautifully adorned.\n\nYour laughter is a melody so sweet,\nMaking my world and my heart complete.\nAs you step into another glorious year,\nKnow that I’m forever holding you near.\n\nHappy Birthday to my queen, my heart, my prize,\nI see my entire forever shining in your eyes.`,
-
-            memories: [
-              { url: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=600", caption: "Our magical moments together ✨" },
-              { url: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=80&w=600", caption: "Every second with you is a blessing 💖" },
-              { url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&q=80&w=600", caption: "Looking forward to forever with you 🌹" }
-            ],
-
-            letter: `From the very first instant our paths crossed on December 4th, my entire universe shifted into brighter colors and sweeter melodies. You became the missing piece I never knew I was searching for.\n\nYou are my safest sanctuary, my wildest adventure, and the absolute love of my life. I coded this entire digital cosmos from scratch just to remind you that my love for you is infinite, expanding, and anchored eternally to your soul.\n\nThank you for loving me so unconditionally and for being the most incredible blessing I could ever dream of.`
-          };
-
-          React.useEffect(() => {
-            const startTime = new Date(config.relationshipStartDate).getTime();
-            const bdayTime = new Date(config.birthdayDate).getTime();
-
-            const updateTimers = () => {
-              const now = new Date().getTime();
-              const diffTogether = now - startTime;
-              if (diffTogether > 0) {
-                setTimeTogether({
-                  days: Math.floor(diffTogether / (1000 * 60 * 60 * 24)),
-                  hours: Math.floor((diffTogether % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                  minutes: Math.floor((diffTogether % (1000 * 60 * 60)) / (1000 * 60)),
-                  seconds: Math.floor((diffTogether % (1000 * 60)) / 1000)
-                });
-              }
-
-              const diffBday = bdayTime - now;
-              if (diffBday > 0) {
-                setBirthdayCountdown({
-                  days: Math.floor(diffBday / (1000 * 60 * 60 * 24)),
-                  hours: Math.floor((diffBday % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                  minutes: Math.floor((diffBday % (1000 * 60 * 60)) / (1000 * 60)),
-                  seconds: Math.floor((diffBday % (1000 * 60)) / 1000)
-                });
-              }
-            };
-
-            updateTimers();
-            const interval = setInterval(updateTimers, 1000);
-            return () => clearInterval(interval);
-          }, []);
-
-          React.useEffect(() => {
-            const newParticles = Array.from({ length: 55 }).map((_, i) => ({
-              id: i,
-              x: Math.random() * 100,
-              y: Math.random() * 100,
-              size: Math.random() * 2.5 + 1,
-              duration: Math.random() * 12 + 8,
-              delay: Math.random() * -20,
-              type: Math.random() > 0.6 ? 'heart' : 'star'
-            }));
-            setParticles(newParticles);
-          }, []);
-
-          const handleMouseMove = (e) => setMousePos({ x: e.clientX, y: e.clientY });
-
-          const handleNoInteraction = () => {
-            setIsNoHovered(true);
-            setNoBtnPos({ top: `${Math.random() * 70 + 15}%`, left: `${Math.random() * 70 + 15}%` });
-          };
-
-          const toggleCard = (index) => setFlippedCards(prev => ({ ...prev, [index]: !prev[index] }));
-          const toggleBdayCard = (index) => setBdayFlippedCards(prev => ({ ...prev, [index]: !prev[index] }));
-
-          const handleVerify = (e) => {
-            e.preventDefault();
-            const typed = loginName.trim().toLowerCase();
-            if (config.acceptedNames.some(name => typed.includes(name))) {
-              setLoginError('');
-              setIsUnlocked(true);
-              setSuccessParticles(Array.from({ length: 30 }).map((_, i) => ({
-                id: i, vx: (Math.random() - 0.5) * 200, vy: (Math.random() - 0.5) * 200, scale: Math.random() * 1.5 + 0.8
-              })));
-              setTimeout(() => setStage('main'), 1400);
-            } else {
-              setLoginError("Oops! That's not my name, my love. HAVE YOU FORGOTTEN MY NAME?! 🥺");
-            }
-          };
-
-          return (
-            <div onMouseMove={handleMouseMove} className="min-h-screen bg-[#03030b] text-white overflow-x-hidden relative font-sans">
-              <div className="cursor-aura hidden md:block" style={{ left: `${mousePos.x}px`, top: `${mousePos.y}px` }}></div>
-              <div className="ambient-blob bg-rose-600/15 w-[650px] h-[650px] top-[-10%] left-[-10%]"></div>
-              <div className="ambient-blob bg-purple-600/15 w-[600px] h-[600px] bottom-[-10%] right-[-10%]"></div>
-
-              {particles.map((p) => (
-                <div key={p.id} className="particle text-pink-400/35" style={{ left: `${p.x}%`, top: '105%', animationDuration: `${p.duration}s`, animationDelay: `${p.delay}s`, transform: `scale(${p.size})` }}>
-                  {p.type === 'heart' ? '❤️' : '✨'}
-                </div>
-              ))}
-
-              {stage === 'intro' && (
-                <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-                  <div className="glass-panel p-10 md:p-14 rounded-3xl max-w-lg w-full text-center relative overflow-hidden">
-                    <h1 className="text-3xl md:text-5xl font-extrabold mb-3">Hey <span className="text-gradient">{config.babeName}</span></h1>
-                    <p className="text-gray-300 text-base md:text-lg mb-12">HAPPY LOVER/GIRLFRIEND DAY, and I have a small childplay just for you. Are you ready to see it?</p>
-                    <div className="relative h-36 w-full flex justify-center items-center">
-                      <button onClick={() => setStage('verify')} className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-20 px-10 py-4 bg-gradient-to-r from-rose-500 via-pink-600 to-purple-600 rounded-full font-bold text-lg shadow-xl text-white">
-                        Yes, take me in ✨
-                      </button>
-                      <button onMouseEnter={handleNoInteraction} onTouchStart={handleNoInteraction} style={isNoHovered ? { position: 'fixed', top: noBtnPos.top, left: noBtnPos.left, transition: 'all 0.15s ease-out' } : { position: 'absolute', top: '85%', left: '50%', transform: 'translateX(-50%)' }} className="z-30 px-6 py-2 bg-white/5 border border-white/10 rounded-full text-gray-400 text-sm">
-                        No 🙈
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {stage === 'verify' && (
-                <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-                  <div className="glass-panel p-8 md:p-12 rounded-3xl max-w-md w-full text-center relative overflow-hidden">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-3">Identity Check 🕵️‍♀️</h2>
-                    <p className="text-gray-300 text-sm md:text-base mb-8">Type your boyfriend/lover's full name:</p>
-                    <form onSubmit={handleVerify} className="flex flex-col gap-4">
-                      <input type="text" placeholder="e.g. ❤️J🩵T✨️E❣️" value={loginName} onChange={(e) => { setLoginName(e.target.value); setLoginError(''); }} disabled={isUnlocked} className="w-full bg-black/40 border border-white/15 rounded-2xl px-5 py-4 text-center text-lg text-white focus:outline-none focus:border-rose-500" />
-                      {loginError && <p className="text-red-400 text-xs md:text-sm">{loginError}</p>}
-                      <button type="submit" disabled={!loginName.trim() || isUnlocked} className="mt-2 py-4 px-6 rounded-2xl font-bold bg-gradient-to-r from-rose-500 to-purple-600 text-white shadow-lg">
-                        {isUnlocked ? "Access Granted! ❤️" : "Unlock"}
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              )}
-
-              {stage === 'main' && (
-                <div className="relative z-10 w-full min-h-screen py-16 px-4 md:px-8 flex flex-col items-center">
-                  <div className="text-center mb-10 max-w-2xl">
-                    <div className="inline-block px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs md:text-sm font-medium mb-4">
-                      🔥 Happy {config.anniversaryDate} Birthday in Advance, Elizabeth Tofunmi!
-                    </div>
-                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-gradient mb-4">I Love You Forever like you once said, LOVE IS SWEET FOREVER.</h1>
-                    <p className="text-gray-400 text-base md:text-lg">Crafted with devotion by <span className="text-rose-400">{config.yourName}</span></p>
-                  </div>
-
-                  <div className="w-full max-w-5xl mb-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="glass-panel rounded-3xl p-6 border border-rose-500/20 shadow-2xl flex flex-col justify-between">
-                      <h3 className="text-base font-bold text-white mb-4">Our Journey Together ❤️ (counting)</h3>
-                      <div className="grid grid-cols-4 gap-2 text-center">
-                        <div className="bg-black/40 border border-white/10 rounded-xl py-2"><div className="text-lg font-black text-rose-400">{timeTogether.days}</div><div className="text-[9px] text-gray-400">Days</div></div>
-                        <div className="bg-black/40 border border-white/10 rounded-xl py-2"><div className="text-lg font-black text-rose-400">{timeTogether.hours}</div><div className="text-[9px] text-gray-400">Hours</div></div>
-                        <div className="bg-black/40 border border-white/10 rounded-xl py-2"><div className="text-lg font-black text-rose-400">{timeTogether.minutes}</div><div className="text-[9px] text-gray-400">Mins</div></div>
-                        <div className="bg-black/40 border border-white/10 rounded-xl py-2"><div className="text-lg font-black text-rose-400">{timeTogether.seconds}</div><div className="text-[9px] text-gray-400">Secs</div></div>
-                      </div>
-                    </div>
-
-                    <div className="glass-panel rounded-3xl p-6 border border-purple-500/20 shadow-2xl flex flex-col justify-between">
-                      <h3 className="text-base font-bold text-white mb-4">Your Birthday Countdown 🎂 (way to another level of life)</h3>
-                      <div className="grid grid-cols-4 gap-2 text-center">
-                        <div className="bg-black/40 border border-white/10 rounded-xl py-2"><div className="text-lg font-black text-purple-300">{birthdayCountdown.days}</div><div className="text-[9px] text-gray-400">Days</div></div>
-                        <div className="bg-black/40 border border-white/10 rounded-xl py-2"><div className="text-lg font-black text-purple-300">{birthdayCountdown.hours}</div><div className="text-[9px] text-gray-400">Hours</div></div>
-                        <div className="bg-black/40 border border-white/10 rounded-xl py-2"><div className="text-lg font-black text-purple-300">{birthdayCountdown.minutes}</div><div className="text-[9px] text-gray-400">Mins</div></div>
-                        <div className="bg-black/40 border border-white/10 rounded-xl py-2"><div className="text-lg font-black text-purple-300">{birthdayCountdown.seconds}</div><div className="text-[9px] text-gray-400">Secs</div></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="w-full flex justify-center mb-28 relative">
-                    <div className="relative w-64 h-64 flex items-center justify-center">
-                      <div className="ripple-ring"></div>
-                      <div className="ripple-ring"></div>
-                      <div className="ripple-ring"></div>
-                      <div className="absolute inset-0 animate-[spin_12s_linear_infinite]"><div className="orbit-element bg-rose-300"></div></div>
-                      <div className="relative z-10 bg-gradient-to-br from-rose-500 via-pink-600 to-rose-700 w-36 h-36 rounded-full flex items-center justify-center animate-heartbeat shadow-2xl">
-                         <span className="text-5xl">❤️</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 p-1.5 glass-panel rounded-full mb-12 max-w-lg w-full justify-center flex-wrap">
-                    <button onClick={() => setActiveTab('letter')} className={`px-5 py-2 rounded-full text-xs md:text-sm font-semibold ${activeTab === 'letter' ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white' : 'text-gray-400'}`}>Love Letter 💌</button>
-                    <button onClick={() => setActiveTab('birthday')} className={`px-5 py-2 rounded-full text-xs md:text-sm font-semibold ${activeTab === 'birthday' ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white' : 'text-gray-400'}`}>Birthday Poem & Wishes 🎂</button>
-                    <button onClick={() => setActiveTab('gallery')} className={`px-5 py-2 rounded-full text-xs md:text-sm font-semibold ${activeTab === 'gallery' ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white' : 'text-gray-400'}`}>Memories 📸</button>
-                  </div>
-
-                  <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">
-                    <div className="lg:col-span-7 flex flex-col">
-                      {activeTab === 'letter' && (
-                        <div className="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden h-full">
-                          <h3 className="text-3xl font-serif font-bold text-white mb-8">My Dearest <span className="text-rose-400">{config.babeName}</span>,</h3>
-                          <div className="space-y-6 text-gray-200 text-lg md:text-xl font-serif">
-                            {config.letter.split('\n\n').map((p, i) => <p key={i}>{p}</p>)}
-                            <div className="pt-8 border-t border-white/10 mt-8">
-                              <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">With all my heart,</p>
-                              <span className="text-2xl font-bold text-gradient font-sans">{config.yourName}</span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {activeTab === 'birthday' && (
-                        <div className="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden h-full flex flex-col justify-between">
-                          <div>
-                            <h3 className="text-2xl font-bold text-white mb-4">Happy Birthday, Elizabeth Tofunmi! 🌹</h3>
-                            <div className="bg-black/30 border border-purple-500/20 rounded-2xl p-6 my-4 font-serif italic text-purple-200 whitespace-pre-line leading-relaxed text-base">
-                              {config.birthdaycoat}
-                            </div>
-                          </div>
-                          <div className="mt-4">
-                            <p className="text-xs uppercase tracking-widest text-gray-400 mb-3">Tap birthday wishes:</p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                              {config.birthdayWishes.map((wish, idx) => (
-                                <div key={idx} onClick={() => toggleBdayCard(idx)} className="relative h-24 perspective-1000 cursor-pointer">
-                                  <div className={`w-full h-full relative preserve-3d transition-transform duration-500 ${bdayFlippedCards[idx] ? 'rotate-y-180' : ''}`}>
-                                    <div className="absolute inset-0 backface-hidden glass-panel rounded-xl flex items-center justify-center p-3 border border-purple-500/30 text-center text-xs font-bold text-purple-200">🎁 {wish.title} (Tap)</div>
-                                    <div className="absolute inset-0 backface-hidden rotate-y-180 glass-panel !bg-purple-950/80 rounded-xl flex items-center justify-center p-3 text-center text-xs text-purple-100">"{wish.text}"</div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {activeTab === 'gallery' && (
-                        <div className="glass-panel rounded-3xl p-6 md:p-8 h-full flex flex-col justify-between">
-                          <h3 className="text-2xl font-bold text-white mb-6">Our Precious Memories 📸</h3>
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            {config.memories.map((mem, idx) => (
-                              <div key={idx} className="bg-white/5 border border-white/10 rounded-2xl p-3">
-                                <img src={mem.url} alt="Memory" className="w-full h-44 object-cover rounded-xl mb-3" />
-                                <p className="text-xs text-center text-gray-300 italic">"{mem.caption}"</p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="lg:col-span-5 flex flex-col gap-6">
-                      <h3 className="text-xl font-bold text-white mb-1">Why I choose You</h3>
-                      <div className="grid grid-cols-1 gap-4">
-                        {config.reasons.map((reason, index) => (
-                          <div key={index} className="relative w-full h-36 perspective-1000 cursor-pointer" onClick={() => toggleCard(index)}>
-                            <div className={`w-full h-full relative preserve-3d transition-transform duration-700 ${flippedCards[index] ? 'rotate-y-180' : ''}`}>
-                              <div className="absolute inset-0 backface-hidden glass-panel rounded-2xl flex items-center justify-between px-6 border border-white/10">
-                                <div><h4 className="text-lg font-bold text-gray-100">{reason.title}</h4><p className="text-xs text-rose-400">Tap to reveal reason</p></div>
-                                <span>➡️</span>
-                              </div>
-                              <div className="absolute inset-0 backface-hidden rotate-y-180 glass-panel !bg-rose-950/80 rounded-2xl flex items-center justify-center p-6 text-center border border-rose-500/30">
-                                <p className="text-rose-100 text-base">"{reason.text}"</p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-32 text-center text-gray-500 text-sm">Built with infinite passion and LOVE for Elizabeth Tofunmi by Abioye Daniel Olusegun.</div>
-                </div>
-              )}
+            <div class="w-16 h-16 bg-gradient-to-tr from-amber-400 via-pink-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-xl shadow-pink-500/20">
+                👑
             </div>
-          );
+
+            <div class="space-y-2">
+                <span class="text-amber-400 font-royal text-[11px] uppercase tracking-[0.35em] font-semibold">Private VIP Tribute</span>
+                <h1 class="text-2xl sm:text-3xl font-bold font-royal text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-pink-200 to-white">
+                    Abioye Moyinoluwa Dorcas
+                </h1>
+                <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">
+                    An AMAZING SISTER and GENIUS MIND behind Magnificent God Business Centre.
+                </p>
+            </div>
+
+            <button onclick="unlockPortal()" class="w-full bg-gradient-to-r from-amber-400 via-pink-500 to-purple-600 hover:opacity-95 text-slate-950 font-bold py-4 px-6 rounded-xl shadow-lg transition-transform active:scale-95 text-xs uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer font-royal">
+                <span>✨ Enter</span>
+            </button>
+            <p class="text-[10px] text-gray-500">audio</p>
+        </div>
+    </div>
+
+    <!-- ================= MAIN CELEBRATION PORTAL ================= -->
+    <div id="mainDashboard" class="max-w-md w-full z-10 flex flex-col items-center space-y-6 opacity-0 pointer-events-none transition-opacity duration-700 py-6">
+
+        <!-- Header Action Bar -->
+        <div class="w-full flex justify-between items-center px-1">
+            <button onclick="toggleAudio()" id="audioBtn" class="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 px-3.5 py-2 rounded-full text-xs font-medium backdrop-blur-md transition cursor-pointer shadow-md text-amber-300">
+                <span id="audioIcon">🎵</span> <span id="audioText">Melody</span>
+            </button>
+            <button onclick="triggerConfettiBurst()" class="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-pink-500 text-slate-950 font-bold px-4 py-2 rounded-full text-xs shadow-lg hover:opacity-90 transition cursor-pointer font-royal">
+                🎉 Celebrate
+            </button>
+        </div>
+
+        <!-- Celebrant Title Banner -->
+        <div class="text-center space-y-1.5">
+            <span class="text-amber-400 uppercase tracking-[0.3em] text-[10px] font-semibold font-royal">Magnificent God Business Centre</span>
+            <h1 class="text-2xl sm:text-3xl font-bold font-royal text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-pink-200 to-white">
+                Abioye Moyinoluwa Dorcas
+            </h1>
+            <p class="text-pink-300/90 text-xs font-medium">Happy Birthday to My BOSS👑</p>
+        </div>
+
+
+        <!-- ================= 5 INTERACTIVE FLIP CARDS ================= -->
+        <div class="w-full space-y-3">
+            <div class="flex justify-between items-center px-1">
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-widest font-royal">Interactive Tribute Cards</span>
+                <span id="cardIndicator" class="text-[11px] text-amber-400 font-bold">1 of 5</span>
+            </div>
+
+            <!-- Viewport -->
+            <div class="scene-container relative w-full h-[385px]">
+                
+                <!-- CARD 1: PORTRAIT / PICTURE -->
+                <div id="tributeCard-0" class="absolute inset-0 scene-container cursor-pointer transition-all duration-500" onclick="flipCard(0)">
+                    <div class="card-rotator w-full h-full relative rounded-3xl shadow-2xl border border-white/10 bg-gradient-to-b from-purple-950/40 via-slate-900/80 to-slate-950 p-6 flex flex-col justify-between">
+                        <!-- Front -->
+                        <div class="card-face absolute inset-0 p-6 flex flex-col justify-between">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-amber-400/10 text-amber-300 border border-amber-400/20 text-[10px] px-3 py-1 rounded-full font-medium">Portrait & Grace ↺</span>
+                                <span class="text-pink-400 text-sm">❤️</span>
+                            </div>
+                            <!-- FEATURED PICTURE FRAME -->
+                            <div class="relative w-36 h-36 sm:w-40 sm:h-40 rounded-2xl mx-auto overflow-hidden border border-amber-400/40 shadow-xl animate-float-subtle">
+                                <img src="https://i.postimg.cc/bwv4C9dT/007b0fbd-9419-4f98-9f6a-d02ceac83dff-626a9e8f-e8d0-45a1-9060-d6ef14a2b6ed-2.jpg" alt="Abioye Moyinoluwa Dorcas" class="w-full h-full object-cover">
+                            </div>
+                            <div class="text-center space-y-1">
+                                <h3 class="text-base font-bold font-royal text-white">The Queen of Elegance</h3>
+                                <p class="text-xs text-pink-300/80">Tap to flip ↺</p>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="card-face card-back absolute inset-0 p-6 flex flex-col justify-between text-left bg-gradient-to-br from-slate-900 via-purple-950/80 to-indigo-950/90 rounded-3xl">
+                            <div class="flex justify-between items-center">
+                                <span class="text-amber-300 font-royal text-xs font-bold">🎂</span>
+                                <span class="bg-pink-500/20 text-pink-300 text-[10px] px-2.5 py-0.5 rounded-full">Flip Back</span>
+                            </div>
+                            <div class="space-y-2.5">
+                                <p class="text-xs sm:text-sm text-gray-200 leading-relaxed">
+                                    Your radiance, poise, and exceptional leadership shine brighter than gold. Having you as an elder sister is a priceless blessing I will always cherish.
+                                </p>
+                                <p class="text-xs text-amber-200/90 italic font-royal">"A queen rules with grace and unshakeable strength."</p>
+                            </div>
+                            <div class="border-t border-white/10 pt-2 text-center">
+                                <p class="text-amber-300 font-royal text-xs font-bold">Shine On Forever and Blessed✨</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 2: BUSINESS CENTRE LEADERSHIP -->
+                <div id="tributeCard-1" class="absolute inset-0 scene-container cursor-pointer transition-all duration-500 pointer-events-none opacity-0 scale-95" onclick="flipCard(1)">
+                    <div class="card-rotator w-full h-full relative rounded-3xl shadow-2xl border border-white/10 bg-gradient-to-b from-indigo-950/40 via-slate-900/80 to-slate-950 p-6 flex flex-col justify-between">
+                        <!-- Front -->
+                        <div class="card-face absolute inset-0 p-6 flex flex-col justify-between">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-indigo-400/10 text-indigo-300 border border-indigo-400/20 text-[10px] px-3 py-1 rounded-full font-medium">Business Leadership ↺</span>
+                                <span class="text-amber-400 text-sm">🏢</span>
+                            </div>
+                            <div class="w-24 h-24 bg-gradient-to-tr from-amber-400/10 to-purple-500/10 border border-amber-400/30 rounded-2xl mx-auto flex items-center justify-center text-4xl shadow-inner">
+                                💼
+                            </div>
+                            <div class="text-center space-y-1">
+                                <h3 class="text-base font-bold font-royal text-white">Magnificent God Business Centre CEO</h3>
+                                <p class="text-xs text-indigo-300/80">Tap to view leadership tribute ↺</p>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="card-face card-back absolute inset-0 p-6 flex flex-col justify-between text-left bg-gradient-to-br from-slate-900 via-indigo-950/80 to-purple-950/90 rounded-3xl">
+                            <div class="flex justify-between items-center">
+                                <span class="text-amber-300 font-royal text-xs font-bold">THE ULTIMATE BOSS</span>
+                                <span class="bg-indigo-500/20 text-indigo-300 text-[10px] px-2.5 py-0.5 rounded-full">Flip Back</span>
+                            </div>
+                            <div class="space-y-2.5">
+                                <p class="text-xs sm:text-sm text-gray-200 leading-relaxed">
+                                    Watching you manage Magnificent God Business Centre with such precision, integrity, and wisdom is deeply inspiring. You are an exceptional boss who leads by example.
+                                </p>
+                                <p class="text-xs text-amber-200/90 italic font-royal">"Excellence is your lifelong trademark."</p>
+                            </div>
+                            <div class="border-t border-white/10 pt-2 text-center">
+                                <p class="text-amber-300 font-royal text-xs font-bold">Boundless Success Ahead 🚀</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 3: SISTERLY BOND -->
+                <div id="tributeCard-2" class="absolute inset-0 scene-container cursor-pointer transition-all duration-500 pointer-events-none opacity-0 scale-95" onclick="flipCard(2)">
+                    <div class="card-rotator w-full h-full relative rounded-3xl shadow-2xl border border-white/10 bg-gradient-to-b from-pink-950/40 via-slate-900/80 to-slate-950 p-6 flex flex-col justify-between">
+                        <!-- Front -->
+                        <div class="card-face absolute inset-0 p-6 flex flex-col justify-between">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-pink-400/10 text-pink-300 border border-pink-400/20 text-[10px] px-3 py-1 rounded-full font-medium">Elder Sister Bond ↺</span>
+                                <span class="text-pink-400 text-sm">💖</span>
+                            </div>
+                            <div class="w-24 h-24 bg-gradient-to-tr from-pink-500/10 to-purple-500/10 border border-pink-400/30 rounded-2xl mx-auto flex items-center justify-center text-4xl shadow-inner">
+                                🛡️
+                            </div>
+                            <div class="text-center space-y-1">
+                                <h3 class="text-base font-bold font-royal text-white">My Protector & Guide</h3>
+                                <p class="text-xs text-pink-300/80">Tap to read our bond tribute ↺</p>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="card-face card-back absolute inset-0 p-6 flex flex-col justify-between text-left bg-gradient-to-br from-slate-900 via-pink-950/80 to-purple-950/90 rounded-3xl">
+                            <div class="flex justify-between items-center">
+                                <span class="text-amber-300 font-royal text-xs font-bold">FAMILY PILLAR</span>
+                                <span class="bg-pink-500/20 text-pink-300 text-[10px] px-2.5 py-0.5 rounded-full">Flip Back</span>
+                            </div>
+                            <div class="space-y-2.5">
+                                <p class="text-xs sm:text-sm text-gray-200 leading-relaxed">
+                                    As a caring sister, you have always watched my back, corrected me with love, and cheered for my victories. I am deeply grateful to have you.
+                                </p>
+                                <p class="text-xs text-pink-200/90 italic font-royal">"Forever bonded by unbreakable love and loyalty."</p>
+                            </div>
+                            <div class="border-t border-white/10 pt-2 text-center">
+                                <p class="text-amber-300 font-royal text-xs font-bold">Thank You For Everything 🥂</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 4: WISDOM & GRACE -->
+                <div id="tributeCard-3" class="absolute inset-0 scene-container cursor-pointer transition-all duration-500 pointer-events-none opacity-0 scale-95" onclick="flipCard(3)">
+                    <div class="card-rotator w-full h-full relative rounded-3xl shadow-2xl border border-white/10 bg-gradient-to-b from-amber-950/40 via-slate-900/80 to-slate-950 p-6 flex flex-col justify-between">
+                        <!-- Front -->
+                        <div class="card-face absolute inset-0 p-6 flex flex-col justify-between">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-amber-400/10 text-amber-300 border border-amber-400/20 text-[10px] px-3 py-1 rounded-full font-medium">Wisdom & Grace ↺</span>
+                                <span class="text-amber-400 text-sm">✨</span>
+                            </div>
+                            <div class="w-24 h-24 bg-gradient-to-tr from-amber-500/10 to-yellow-500/10 border border-amber-400/30 rounded-2xl mx-auto flex items-center justify-center text-4xl shadow-inner">
+                                🌟
+                            </div>
+                            <div class="text-center space-y-1">
+                                <h3 class="text-base font-bold font-royal text-white">Wisdom Beyond Measure</h3>
+                                <p class="text-xs text-amber-300/80">Tap to reveal tribute ↺</p>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="card-face card-back absolute inset-0 p-6 flex flex-col justify-between text-left bg-gradient-to-br from-slate-900 via-amber-950/80 to-purple-950/90 rounded-3xl">
+                            <div class="flex justify-between items-center">
+                                <span class="text-amber-300 font-royal text-xs font-bold">GRACE & STRENGTH</span>
+                                <span class="bg-amber-500/20 text-amber-300 text-[10px] px-2.5 py-0.5 rounded-full">Flip Back</span>
+                            </div>
+                            <div class="space-y-2.5">
+                                <p class="text-xs sm:text-sm text-gray-200 leading-relaxed">
+                                    Your counsel is golden and your heart is pure. Whenever challenges arise, your calm perspective always brings absolute clarity and direction.
+                                </p>
+                                <p class="text-xs text-amber-200/90 italic font-royal">"A true woman of uncommon wisdom."</p>
+                            </div>
+                            <div class="border-t border-white/10 pt-2 text-center">
+                                <p class="text-amber-300 font-royal text-xs font-bold">Never Change, SIS/Boss💫</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 5: DIVINE PRAYERS -->
+                <div id="tributeCard-4" class="absolute inset-0 scene-container cursor-pointer transition-all duration-500 pointer-events-none opacity-0 scale-95" onclick="flipCard(4)">
+                    <div class="card-rotator w-full h-full relative rounded-3xl shadow-2xl border border-white/10 bg-gradient-to-b from-purple-950/40 via-slate-900/80 to-slate-950 p-6 flex flex-col justify-between">
+                        <!-- Front -->
+                        <div class="card-face absolute inset-0 p-6 flex flex-col justify-between">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-purple-400/10 text-purple-300 border border-purple-400/20 text-[10px] px-3 py-1 rounded-full font-medium">New Year Blessings ↺</span>
+                                <span class="text-amber-300 text-sm">🎂</span>
+                            </div>
+                            <div class="w-24 h-24 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 border border-purple-400/30 rounded-2xl mx-auto flex items-center justify-center text-4xl shadow-inner">
+                                🎉
+                            </div>
+                            <div class="text-center space-y-1">
+                                <h3 class="text-base font-bold font-royal text-white">Overflowing Blessings</h3>
+                                <p class="text-xs text-purple-300/80">Tap to view your birthday prayer ↺</p>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="card-face card-back absolute inset-0 p-6 flex flex-col justify-between text-left bg-gradient-to-br from-slate-900 via-purple-950/80 to-indigo-950/90 rounded-3xl">
+                            <div class="flex justify-between items-center">
+                                <span class="text-amber-300 font-royal text-xs font-bold">DIVINE PRAYER</span>
+                                <span class="bg-purple-500/20 text-purple-300 text-[10px] px-2.5 py-0.5 rounded-full">Flip Back</span>
+                            </div>
+                            <div class="space-y-2.5">
+                                <p class="text-xs sm:text-sm text-gray-200 leading-relaxed">
+                                    May this new year unlock gates of massive financial increase, sound health, unstoppable expansion of our Company  and unmitigated joy. Amen!
+                                </p>
+                                <p class="text-xs text-amber-200/90 italic font-royal">"The best chapters of your life are unfolding now."</p>
+                            </div>
+                            <div class="border-t border-white/10 pt-2 text-center">
+                                <p class="text-amber-300 font-royal text-xs font-bold">Happy Birthday Dorcas! 🥂</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex justify-between items-center pt-2 px-1">
+                <button onclick="previousCard()" class="bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer">
+                    ← Previous Card
+                </button>
+                <button onclick="nextCard()" class="bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 px-4 py-2 rounded-xl text-xs font-bold transition shadow-md cursor-pointer font-royal">
+                    Next Card →
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ================= 10 BIRTHDAY WISHES CAROUSEL ================= -->
+        <div class="w-full bg-white/[0.02] border border-white/10 rounded-3xl p-5 backdrop-blur-md shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="text-xs font-semibold text-amber-300 uppercase tracking-widest font-royal">10 Birthday Wishes</span>
+                <span id="wishCounter" class="text-[11px] text-pink-400 font-bold">Wish 1 of 10</span>
+            </div>
+
+            <div id="wishBox" class="text-xs sm:text-sm text-gray-200 italic min-h-[70px] flex items-center justify-center text-center transition-opacity duration-300 px-2 leading-relaxed">
+                "May your business scale new heights at Magnificent God Business Centre, and may your radiant smile never fade. Happy Birthday, Dorcas!"
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="previousWish()" class="w-1/3 bg-white/5 hover:bg-white/10 text-white font-medium py-2.5 rounded-xl text-xs transition cursor-pointer border border-white/10">
+                    ← Prev
+                </button>
+                <button onclick="nextWish()" class="w-2/3 bg-gradient-to-r from-amber-400 to-pink-500 hover:opacity-95 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer font-royal">
+                   Next✨
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer Signature -->
+        <div class="text-center pt-2 pb-4 space-y-1">
+            <p class="text-gray-500 text-[10px] tracking-widest uppercase font-royal">Global Connection</p>
+            <p class="text-amber-400/70 text-[10px]">Mother of Magnificent God Business Centre</p>
+        </div>
+
+    </div>
+
+    <!-- Handcrafted JavaScript Engine -->
+    <script>
+        // 1. Audio Synthesizer & Gateway Logic
+        let audioCtx = null;
+        let soundActive = true;
+        let melodyLoop = null;
+
+        function unlockPortal() {
+            const gateway = document.getElementById('entryGateway');
+            const dashboard = document.getElementById('mainDashboard');
+
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                startCelebrationChimes();
+                soundActive = true;
+            } catch(e) {
+                soundActive = false;
+            }
+
+            gateway.style.opacity = '0';
+            setTimeout(() => {
+                gateway.style.display = 'none';
+                dashboard.style.opacity = '1';
+                dashboard.classList.remove('pointer-events-none');
+            }, 600);
+
+            triggerConfettiBurst();
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function toggleAudio() {
+            soundActive = !soundActive;
+            const btn = document.getElementById('audioBtn');
+            const text = document.getElementById('audioText');
+            if (soundActive) {
+                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                text.innerText = "Melody Playing";
+                btn.className = "flex items-center gap-2 bg-white/10 border border-white/20 px-3.5 py-2 rounded-full text-xs font-medium backdrop-blur-md transition cursor-pointer shadow-md text-amber-300";
+            } else {
+                text.innerText = "Melody Muted";
+                btn.className = "flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-2 rounded-full text-xs font-medium backdrop-blur-md transition cursor-pointer shadow-md text-gray-400";
+            }
+        }
+
+        function playNote(freq, duration) {
+            if (!audioCtx || !soundActive) return;
+            try {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        function startCelebrationChimes() {
+            const notes = [
+                264, 264, 297, 264, 352, 330,
+                264, 264, 297, 264, 396, 352,
+                264, 264, 528, 440, 352, 330, 297,
+                466, 466, 440, 352, 396, 352
+            ];
+            const timings = [
+                400, 200, 600, 600, 600, 1000,
+                400, 200, 600, 600, 600, 1000,
+                400, 200, 600, 600, 600, 600, 1000,
+                400, 200, 600, 600, 600, 1200
+            ];
+
+            let index = 0;
+            function sequence() {
+                if (!audioCtx) return;
+                if (index >= notes.length) {
+                    index = 0;
+                    melodyLoop = setTimeout(sequence, 2500);
+                    return;
+                }
+                playNote(notes[index], timings[index] / 1000);
+                let delay = timings[index] * 1.15;
+                index++;
+                melodyLoop = setTimeout(sequence, delay);
+            }
+            sequence();
+        }
+
+        // 2. 5 Flip Cards Engine
+        let activeCard = 0;
+        const totalCards = 5;
+        let cardStates = [false, false, false, false, false];
+
+        function updateCards(idx) {
+            for (let i = 0; i < totalCards; i++) {
+                const el = document.getElementById(`tributeCard-${i}`);
+                if (i === idx) {
+                    el.style.opacity = '1';
+                    el.style.pointerEvents = 'auto';
+                    el.style.transform = 'scale(1)';
+                } else {
+                    el.style.opacity = '0';
+                    el.style.pointerEvents = 'none';
+                    el.style.transform = 'scale(0.95)';
+                    el.querySelector('.card-rotator').style.transform = 'rotateY(0deg)';
+                    cardStates[i] = false;
+                }
+            }
+            document.getElementById('cardIndicator').innerText = `${idx + 1} of ${totalCards}`;
+        }
+
+        function nextCard() {
+            activeCard = (activeCard + 1) % totalCards;
+            updateCards(activeCard);
+        }
+
+        function previousCard() {
+            activeCard = (activeCard - 1 + totalCards) % totalCards;
+            updateCards(activeCard);
+        }
+
+        function flipCard(idx) {
+            cardStates[idx] = !cardStates[idx];
+            const rotator = document.querySelector(`#tributeCard-${idx} .card-rotator`);
+            rotator.style.transform = cardStates[idx] ? 'rotateY(180deg)' : 'rotateY(0deg)';
+        }
+
+        // 3. 10 Birthday Wishes Carousel
+        const wishes = [
+            "\"May our business scale new heights at Magnificent God Business Centre, and may your radiant smile never fade. Happy Birthday, Sis Dorcas!\"",
+            "\"Thank you for being an incredible leader and an amazing elder sister who always guides us right. Have a truly wonderful birthday celebration!\"",
+            "\"Wishing you peace that surpasses understanding, overflowing wealth, and God's continuous protection over every single step you take.\"",
+            "\"You carry so much grace, strength, and wisdom. May this new year reward your hard work with monumental breakthroughs!\"",
+            "\"To my sister and boss: Your dedication inspires everyone around you. May your special day bring you unalloyed joy and celebration!\"",
+            "\"May doors of unprecedented favor open for you this year. Everything you lay your hands on at Magnificent God Business Centre will prosper!\"",
+            "\"Thank you for being the pillar of strength in our family and workplace. Wishing you long life, vibrant health, and unending happiness.\"",
+            "\"Our uncomparerable cook: May your Talent and Grace never run down, Your Owner will not become a Tenant.\"",
+            "\"May your cups run over with double honor and massive financial increase today and always. Happy Birthday to our ultimate queen!\"",
+            "\"Your leadership is a gift to us all. May God crown your new age with stunning miracles, sweet peace, and glorious testimonies.\"",
+            "\"Here's to celebrating an exceptional woman, a phenomenal sister, and a brilliant boss. Have an extraordinarily blessed birthday, Dorcas! 🥂\""
+        ];
+
+        let activeWish = 0;
+
+        function refreshWish() {
+            const box = document.getElementById('wishBox');
+            const counter = document.getElementById('wishCounter');
+            box.style.opacity = '0';
+            setTimeout(() => {
+                box.innerText = wishes[activeWish];
+                box.style.opacity = '1';
+                counter.innerText = `Wish ${activeWish + 1} of ${wishes.length}`;
+            }, 200);
+        }
+
+        function nextWish() {
+            activeWish = (activeWish + 1) % wishes.length;
+            refreshWish();
+        }
+
+        function previousWish() {
+            activeWish = (activeWish - 1 + wishes.length) % wishes.length;
+            refreshWish();
+        }
+
+        // 4. Confetti Burst
+        function triggerConfettiBurst() {
+            confetti({
+                particleCount: 140,
+                spread: 95,
+                origin: { y: 0.6 }
+            });
+        }
     </script>
 </body>
 </html>
-
